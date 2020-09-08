@@ -1,0 +1,22 @@
+extends header.pug 
+
+block styles 
+    link(rel="stylesheet", href="/product.css") 
+    link(rel="stylesheet", href="/forms.css") 
+
+block content 
+    main
+        form.product-form(action="/signup" method="POST")
+            div.form-control
+                label(for="username") Username
+                input(type="text", name="username")#username
+            div.form-control
+                label(for="password") Password
+                input(type="text", name="password")#password 
+            div.form-control
+                label(for="password") Confirm Password
+                input(type="text", name="confirmpassword")#confirmpassword
+            button.btn(type="submit") Create Account
+            
+
+
