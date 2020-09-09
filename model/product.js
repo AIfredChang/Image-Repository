@@ -20,7 +20,7 @@ const Product = sequelize.define('images', {
 
     },  
     uploader: { 
-        type: Sequelize.INTEGER, 
+        type: Sequelize.STRING, 
         allowNull: false, 
     }
 

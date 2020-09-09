@@ -42,6 +42,6 @@ app.use((req,res,next) => {
 
 Product.belongsTo(User,{constraints: true, onDelete: 'CASCADE'});
 
-sequelize.sync({force: true}).then(() => {app.listen(3000);}).catch(err => {console.log(err)});
+sequelize.sync().then(() => {app.listen(process.env.PORT || 3000);}).catch(err => {console.log(err)});
 
 

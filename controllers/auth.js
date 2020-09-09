@@ -20,7 +20,7 @@ exports.postLogin = (req,res,next) => {
         }
         if(user.password === password){  
             req.session.isLoggedIn = true; 
-            req.session.userid = user.id;
+            req.session.userid = user.name;
             return req.session.save(err => { 
                 console.log(err); 
                 res.redirect('/');

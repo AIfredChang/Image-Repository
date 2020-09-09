@@ -4,7 +4,7 @@ const fs = require('fs');
 
 
 exports.addProduct = (req,res,next) => { 
-    res.render('add-product', {pagetitle: "f", path: "/admin/add-product",   isAuthenticated: req.session.isLoggedIn});
+    res.render('add-product', {pagetitle: "f", path: "/admin/add-product",   isAuthenticated: req.session.isLoggedIn, user: req.session.userid});
 }; 
 
 exports.postAddProduct = (req,res,next) => {  
@@ -16,7 +16,6 @@ exports.postAddProduct = (req,res,next) => {
     aws.config.update({
       accessKeyId: process.env.ACCESSKEYID,
       secretAccessKey: process.env.SECRETACCESSKEY, 
-      region: process.env.REGION
     }); 
   
     const s3 = new aws.S3(); 
@@ -24,13 +23,13 @@ exports.postAddProduct = (req,res,next) => {
     var params = {
         ACL: 'public-read',
         Bucket: process.env.BUCKET_NAME,
-        Body: file.buffer,
+        Body: req.file.buffer,
         Key: `images/${req.file.originalname}`, 
-        ContentType: file.mimetype,
+        ContentType: req.file.mimetype,
       };  
 
       s3.upload(params).promise().then(data => { 
-        if (!data) {
+        if (data) {
             const locationUrl = data.Location;  
             return  Product.create({ 
                 title: title, 
@@ -47,7 +46,7 @@ exports.postAddProduct = (req,res,next) => {
 
 exports.getShop = (req,res,next) => { 
     Product.fetchAll((products) => { 
-        res.render('shop', {prods: products, path: '/',pagetitle: 'shop',   isAuthenticated: req.session.isLoggedIn});
+        res.render('shop', {prods: products, path: '/',pagetitle: 'shop',   isAuthenticated: req.session.isLoggedIn, user: req.session.userid});
     });
       
     };
@@ -55,38 +54,26 @@ exports.getShop = (req,res,next) => {
 exports.getIndex = (req,res,next) => {   
 
     Product.findAll().then((products) => { 
-        res.render('index', {prods: products, path: '/',pagetitle: 'shop',   isAuthenticated: req.session.isLoggedIn});
+        res.render('index', {prods: products, path: '/',pagetitle: 'shop',   isAuthenticated: req.session.isLoggedIn,  uploader: req.session.userid, user: req.session.userid});
     }).catch(err => console.log(err));
 
    
       
 };
 
-exports.getCart = (req,res,next) => { 
-    res.render('cart', { 
-        path: '/cart', 
-        pagetitle: 'Your Cart', 
-        isAuthenticated: req.session.isLoggedIn
-    });
-}; 
 
-exports.getCheckout = (req,res,next) => { 
-    res.render('checkout', { 
-        path: '/checkout', 
-        pagetitle: 'Checkout', 
-        isAuthenticated: req.session.isLoggedIn
-    });
-}
 
 exports.getProducts = (req,res,next) => { 
     Product.fetchAll((products) => { 
-        res.render('products', {prods: products, path: '/',pagetitle: 'shop',  isAuthenticated: req.session.isLoggedIn});
+        res.render('products', {prods: products, path: '/',pagetitle: 'shop',  isAuthenticated: req.session.isLoggedIn, user: req.session.userid});
     });
 } 
 
 exports.adminProducts =(req,res,next) => { 
-    Product.findAll().then((products) => { 
-        res.render('admin', {prods: products, path: '/admin/products',pagetitle: 'admin',   isAuthenticated: req.session.isLoggedIn});
+    Product.findAll({ where: {
+        uploader: req.session.userid
+      }}).then((products) => { 
+        res.render('admin', {prods: products, path: '/admin/products',pagetitle: 'admin',   isAuthenticated: req.session.isLoggedIn, user: req.session.userid});
     }).catch(err => console.log(err));
 }
 

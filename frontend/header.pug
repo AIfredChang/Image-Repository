@@ -11,19 +11,22 @@ html(lang="en")
             nav.main-header__nav
                 ul.main-header__item-list
                     li.main-header__item 
-                        a(href="/" class=(path === '/' ? 'active' : '')) Shop 
-                    li.main-header__item 
-                        a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Product  
-                    li.main-header__item 
-                        a(href="/admin/products" class=(path === '/admin/products' ? 'active' : '')) Admin Products
-                ul.main-header__item-list 
-                    li.main-header__item 
-                        a(href="/login") Login   
-                    li.main-header__item 
-                        a(href="/signup") Sign Up
-                    li.main-header__item 
-                        form(action='/logout', method="post") 
-                            button(type="submit") Logout
+                        a(href="/" class=(path === '/' ? 'active' : '')) Gallery 
+                    if isAuthenticated
+                        li.main-header__item 
+                            a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Image 
+                        li.main-header__item 
+                            a(href="/admin/products" class=(path === '/admin/products' ? 'active' : '')) Your Images
+                ul.main-header__item-list  
+                    if !isAuthenticated
+                        li.main-header__item 
+                            a(href="/login" class=(path === '/login' ? 'active' : '')) Login   
+                        li.main-header__item 
+                            a(href="/signup" class=(path === '/signup' ? 'active' : '')) Sign Up 
+                    else 
+                        li.main-header__item 
+                            form(action='/logout', method="post") 
+                                button(type="submit") Logout
         
         
         block content
