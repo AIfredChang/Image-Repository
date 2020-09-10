@@ -14,10 +14,10 @@ const Product = require('./model/product');
 const User = require('./model/user');   
 
 var options = {
-    host: 'localhost',
-    user: 'root',
-    password: 'imagerepository',
-    database: 'img_repo', 
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DB, 
     createDatabaseTable: true, 
 };
 
